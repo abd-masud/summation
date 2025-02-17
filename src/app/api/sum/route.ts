@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server";
 
+let hitCount = 0;
+
 export async function POST(req: Request) {
     try {
         const { num1, num2 } = await req.json();
 
         if (typeof num1 !== "number" || typeof num2 !== "number") {
-            return NextResponse.json({ error: "Invalid input. Numbers required." }, { status: 400 });
+            return NextResponse.json(
+                { error: "Invalid input. Numbers required.", status: 400, apiHits: hitCount },
+                { status: 400 }
+            );
         }
 
+        hitCount++;
         const sum = num1 + num2;
 
-        const response = NextResponse.json({ sum });
+        const response = NextResponse.json(
+            { sum, apiHits: hitCount, status: 200 },
+            { status: 200 }
+        );
 
         response.headers.set("Access-Control-Allow-Origin", "*");
         response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -18,7 +27,10 @@ export async function POST(req: Request) {
 
         return response;
     } catch {
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json(
+            { error: "Internal server error", status: 500, apiHits: hitCount },
+            { status: 500 }
+        );
     }
 }
 

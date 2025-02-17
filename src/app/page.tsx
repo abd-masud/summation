@@ -6,6 +6,9 @@ export default function Home() {
   const [num1, setNum1] = useState<number | "">("");
   const [num2, setNum2] = useState<number | "">("");
   const [sum, setSum] = useState<number | null>(null);
+  const [apiHits, setApiHits] = useState<number>(0);
+  const [apiResponse, setApiResponse] = useState<string | null>(null);
+  const [status, setStatus] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,10 +29,14 @@ export default function Home() {
       });
 
       const data = await res.json();
+      setStatus(res.status);
+
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
       setSum(data.sum);
-    } catch {
+      setApiHits(data.apiHits);
+      setApiResponse(JSON.stringify(data, null, 2));
+    } catch (err) {
       setError("Error");
     }
   };
@@ -69,6 +76,15 @@ export default function Home() {
         </button>
       </form>
       {sum !== null && <p className="mt-4 text-lg font-semibold">Sum: {sum}</p>}
+      {status !== null && (
+        <p className="mt-2 text-gray-700">Status: {status}</p>
+      )}
+      {apiHits > 0 && <p className="mt-2 text-blue-500">API Hits: {apiHits}</p>}
+      {apiResponse && (
+        <pre className="mt-4 p-2 bg-gray-200 rounded text-sm">
+          {apiResponse}
+        </pre>
+      )}
       {error && <p className="mt-4 text-red-500">{error}</p>}
     </div>
   );

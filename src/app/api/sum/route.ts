@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         response.headers.set("Access-Control-Allow-Headers", "Content-Type");
 
         return response;
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

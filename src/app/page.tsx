@@ -36,7 +36,7 @@ export default function Home() {
       setSum(data.sum);
       setApiHits(data.apiHits);
       setApiResponse(JSON.stringify(data, null, 2));
-    } catch (err) {
+    } catch {
       setError("Error");
     }
   };
